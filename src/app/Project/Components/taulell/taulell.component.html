@@ -1,0 +1,10 @@
+<table class="taulell">
+  <tr *ngFor="let fila of taulell" cdkDropList (cdkDropListDropped)="drop($event)" (dragover)="allowDrop($event)">
+    <td *ngFor="let casella of fila" id="{{casella.id}}" cdkDrop class="droppable"
+      (dragleave)="unhighlightSquare($event)" (cdkDropDropped)="drop($event)"
+      style="background-color: {{casella.color}};">
+      <img *ngIf="casella.peca != ''" cdkDrag src="../../../../assets/{{casella.peca}}.svg" class="draggable"
+        cdkDragBoundary=".taulell" cdkDragData="{{casella.id}}" (cdkDragDropped)="drop($event)">
+    </td>
+  </tr>
+</table>
