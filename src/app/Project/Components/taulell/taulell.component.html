@@ -1,10 +1,50 @@
-<table class="taulell">
-  <tr *ngFor="let fila of taulell" cdkDropList (cdkDropListDropped)="drop($event)" (dragover)="allowDrop($event)">
-    <td *ngFor="let casella of fila" id="{{casella.id}}" cdkDrop class="droppable"
-      (dragleave)="unhighlightSquare($event)" (cdkDropDropped)="drop($event)"
-      style="background-color: {{casella.color}};">
-      <img *ngIf="casella.peca != ''" cdkDrag src="../../../../assets/{{casella.peca}}.svg" class="draggable"
-        cdkDragBoundary=".taulell" cdkDragData="{{casella.id}}" (cdkDragDropped)="drop($event)">
-    </td>
-  </tr>
-</table>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escacs</title>
+</head>
+
+<body>
+  <table class="taulellBlanques">
+    <tr>
+      <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[i-1]}}</td>
+    </tr>
+    <tr *ngFor="let fila of taulellBlanques; let i = index">
+      <td>{{8-i}}</td>
+      <td *ngFor=" let casella of fila" id="{{casella.id}}" (dragover)="allowDrop($event)"
+        (drop)="dropTaulellBlanques($event)" (dragleave)="unhighlightSquare($event)"
+        style="background-color: {{casella.color}};">
+        <img *ngIf="casella.peca != ''" id="{{casella.id}}" src="../../../../assets/{{casella.peca}}.svg"
+          draggable="true" (dragstart)="dragStart($event)" class="w">
+      </td>
+      <td>{{8-i}}</td>
+    </tr>
+    <tr>
+      <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[i-1]}}</td>
+    </tr>
+  </table>
+  <table class="taulellNegres">
+    <tr>
+      <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[8-i]}}</td>
+    </tr>
+    <tr *ngFor="let fila of taulellNegres; let i = index">
+      <td>{{1+i}}</td>
+      <td *ngFor=" let casella of fila" id="{{casella.id}}" (dragover)="allowDrop($event)"
+        (drop)="dropTaulellNegres($event)" (dragleave)="unhighlightSquare($event)"
+        style="background-color: {{casella.color}};">
+        <img *ngIf="casella.peca != ''" id="{{casella.id}}" src="../../../../assets/{{casella.peca}}.svg"
+          draggable="true" (dragstart)="dragStart($event)" class="b">
+      </td>
+      <td>{{1+i}}</td>
+    </tr>
+    <tr>
+      <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[8-i]}}</td>
+    </tr>
+  </table>
+</body>
+
+</html>

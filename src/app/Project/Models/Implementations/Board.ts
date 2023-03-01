@@ -1,6 +1,7 @@
 
 export class Board {
   squares: { id: string; peca: string; color: string; x: number; y: number }[]
+  torn: string = "w";
   constructor() {
     this.squares = [
       { id: "1a", peca: "wrook", color: 'SaddleBrown', x: 1, y: 1 },
@@ -68,8 +69,6 @@ export class Board {
       { id: "8g", peca: "bknight", color: 'white', x: 7, y: 8 },
       { id: "8h", peca: "brook", color: 'SaddleBrown', x: 8, y: 8 }
     ]
-
-
   }
 
   getBoardBlack() {
@@ -109,26 +108,30 @@ export class Board {
     return square;
   }
 
-  getSquareByPosition(x: number, y: number) {
-    var square = this.squares.find(square => square.x === x && square.y === y);
-    if (square == undefined) {
-      return { id: "0", peca: "", color: '', x: 0, y: 0 }
-    }
-    return square;
-  }
-
-  movePiece(from: string, to: string) {
+  movePiece(from: string, to: string, taulell: string) {
     let fromSquare = this.getSquare(from);
     let toSquare = this.getSquare(to);
-    toSquare.peca = fromSquare.peca;
+    let colorFrom = fromSquare.peca.substring(0, 1);
+    let colorTo = toSquare.peca.substring(0, 1);
+    //check if the move is valid
+    if (fromSquare.id == '0' || toSquare.id == '0' || colorFrom == colorTo || colorFrom != this.torn) {
+      return;
+    }
+    //check if pawn is in the last row
+    if (fromSquare.peca == 'wpawn' && toSquare.y == 8) {
+      toSquare.peca = 'wqueen';
+    } else if (fromSquare.peca == 'bpawn' && toSquare.y == 1) {
+      toSquare.peca = 'bqueen';
+    } else {
+      toSquare.peca = fromSquare.peca;
+    }
     fromSquare.peca = '';
+    //check turn
+    if (this.torn == 'w') {
+      this.torn = 'b';
+    } else {
+      this.torn = 'w';
+    }
   }
 
-  movePieceByPosition(fromX: number, fromY: number, toX: number, toY: number) {
-
-    let fromSquare = this.getSquareByPosition(fromX, fromY);
-    let toSquare = this.getSquareByPosition(toX, toY);
-    toSquare.peca = fromSquare.peca;
-    fromSquare.peca = '';
-  }
 }

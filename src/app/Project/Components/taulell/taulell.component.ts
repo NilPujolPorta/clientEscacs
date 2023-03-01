@@ -8,48 +8,74 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   styleUrls: ['./taulell.component.css']
 })
 export class TaulellComponent {
-  board: Board;
-  taulell;
+  boardWhite: Board;
+  boardBlack: Board;
+  taulellBlanques;
+  taulellNegres;
+  alfabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   constructor() {
-    this.board = new Board();
-    this.taulell = this.board.getBoardWhite();
+    this.boardWhite = new Board();
+    this.boardBlack = new Board();
+    this.taulellBlanques = this.boardWhite.getBoardWhite();
+    this.taulellNegres = this.boardBlack.getBoardBlack();
+
   }
 
   ngOnInit() {
   }
 
-  movePiece(from: string, to: string) {
-    this.board.movePiece(from, to);
-    this.taulell = this.board.getBoardWhite();
+  movePieceBlanca(from: string, to: string) {
+    this.boardWhite.movePiece(from, to, "w");
+    this.taulellBlanques = this.boardWhite.getBoardWhite();
+  }
+  movePieceNegra(from: string, to: string) {
+    this.boardBlack.movePiece(from, to, "b");
+    this.taulellNegres = this.boardBlack.getBoardBlack();
   }
 
   getSquare(id: string) {
-    return this.board.getSquare(id);
+    return this.boardBlack.getSquare(id);
   }
 
   highlightSquare(e: any) {
     e.preventDefault();
-    console.log(e);
     e.target.style.backgroundColor = 'yellow';
   }
 
   unhighlightSquare(e: any) {
     e.preventDefault();
-    e.target.style.backgroundColor = 'white';
+    var quadrat = this.getSquare(e.target.id);
+    e.target.style.backgroundColor = quadrat.color;
   }
 
   allowDrop(e: any) {
     e.preventDefault();
+    this.highlightSquare(e);
+
   }
 
-  drag(e: any) {
-    e.dataTransfer.setData("text", e.target.id);
+
+  dropTaulellBlanques(e: any,) {
+    this.unhighlightSquare(e);
+    let posicioInici = e.dataTransfer.getData("text").split("w")[0];
+    if (posicioInici.length != 2) {
+      return;
+    }
+    this.movePieceBlanca(posicioInici, e.target.id);
+  }
+  dropTaulellNegres(e: any,) {
+    this.unhighlightSquare(e);
+    let posicioInici = e.dataTransfer.getData("text").split("b")[0];
+    if (posicioInici.length != 2) {
+      return;
+    }
+    this.movePieceNegra(posicioInici, e.target.id);
   }
 
-  drop(e: any) {
-    console.log(e);
-    var data = e.dataTransfer.getData("text");
-    e.target.appendChild(document.getElementById(data));
+
+  dragStart(e: any) {
+    e.dataTransfer.setData("text", e.target.id + e.target.className);
+
   }
 
 }
