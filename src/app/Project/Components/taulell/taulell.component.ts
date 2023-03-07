@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Board } from '../../Models/Implementations/Board';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Jugador } from '../../Models/Implementations/Jugador';
+import { TaulellService } from '../../services/taulell.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-taulell',
@@ -13,7 +16,12 @@ export class TaulellComponent {
   taulellBlanques;
   taulellNegres;
   alfabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-  constructor() {
+  iniciat: boolean = false;
+  jugadors!: { jugadors: [{ nom: string; color: string; taulell: string; id: string; }] };
+  player!: Jugador;
+  playerName: string = "";
+  private _playerSub!: Subscription;
+  constructor(private taulellService: TaulellService) {
     this.boardWhite = new Board();
     this.boardBlack = new Board();
     this.taulellBlanques = this.boardWhite.getBoardWhite();
@@ -22,14 +30,16 @@ export class TaulellComponent {
   }
 
   ngOnInit() {
+
   }
 
   movePieceBlanca(from: string, to: string) {
-    this.boardWhite.movePiece(from, to, "w");
+    console.log("moving " + from + " to " + to);
+    this.boardWhite.movePiece(from, to, "tw", this.player);
     this.taulellBlanques = this.boardWhite.getBoardWhite();
   }
   movePieceNegra(from: string, to: string) {
-    this.boardBlack.movePiece(from, to, "b");
+    this.boardBlack.movePiece(from, to, "tb", this.player);
     this.taulellNegres = this.boardBlack.getBoardBlack();
   }
 
@@ -57,7 +67,7 @@ export class TaulellComponent {
 
   dropTaulellBlanques(e: any,) {
     this.unhighlightSquare(e);
-    let posicioInici = e.dataTransfer.getData("text").split("w")[0];
+    let posicioInici = e.dataTransfer.getData("text").split("tw")[0];
     if (posicioInici.length != 2) {
       return;
     }
@@ -65,7 +75,7 @@ export class TaulellComponent {
   }
   dropTaulellNegres(e: any,) {
     this.unhighlightSquare(e);
-    let posicioInici = e.dataTransfer.getData("text").split("b")[0];
+    let posicioInici = e.dataTransfer.getData("text").split("tb")[0];
     if (posicioInici.length != 2) {
       return;
     }
@@ -78,7 +88,23 @@ export class TaulellComponent {
 
   }
 
+
+  ready() {
+    this._playerSub = this.taulellService.jugadors.pipe(
+    ).subscribe(jugadors => this.jugadors = jugadors);
+    this._playerSub = this.taulellService.player.pipe(
+    ).subscribe(player => {
+      console.log(JSON.stringify(player));
+      this.player = new Jugador(player.nom, player.color, player.taulell, player.id)
+    });
+    this._playerSub = this.taulellService.iniciar.pipe(
+    ).subscribe(iniciat => this.iniciat = iniciat);
+    this.taulellService.newPlayer(this.playerName);
+
+  }
 }
+
+
 
 
 

@@ -8,43 +8,55 @@
   <title>Escacs</title>
 </head>
 
+<h5><i class="material-icons" style="font-size:20px;color:crimson">warning</i> Només es permeten 4 jugadors alhora</h5>
+
 <body>
-  <table class="taulellBlanques">
-    <tr>
-      <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[i-1]}}</td>
-    </tr>
-    <tr *ngFor="let fila of taulellBlanques; let i = index">
-      <td>{{8-i}}</td>
-      <td *ngFor=" let casella of fila" id="{{casella.id}}" (dragover)="allowDrop($event)"
-        (drop)="dropTaulellBlanques($event)" (dragleave)="unhighlightSquare($event)"
-        style="background-color: {{casella.color}};">
-        <img *ngIf="casella.peca != ''" id="{{casella.id}}" src="../../../../assets/{{casella.peca}}.svg"
-          draggable="true" (dragstart)="dragStart($event)" class="w">
-      </td>
-      <td>{{8-i}}</td>
-    </tr>
-    <tr>
-      <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[i-1]}}</td>
-    </tr>
-  </table>
-  <table class="taulellNegres">
-    <tr>
-      <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[8-i]}}</td>
-    </tr>
-    <tr *ngFor="let fila of taulellNegres; let i = index">
-      <td>{{1+i}}</td>
-      <td *ngFor=" let casella of fila" id="{{casella.id}}" (dragover)="allowDrop($event)"
-        (drop)="dropTaulellNegres($event)" (dragleave)="unhighlightSquare($event)"
-        style="background-color: {{casella.color}};">
-        <img *ngIf="casella.peca != ''" id="{{casella.id}}" src="../../../../assets/{{casella.peca}}.svg"
-          draggable="true" (dragstart)="dragStart($event)" class="b">
-      </td>
-      <td>{{1+i}}</td>
-    </tr>
-    <tr>
-      <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[8-i]}}</td>
-    </tr>
-  </table>
+  <div *ngIf="player == undefined">
+    <label for="nom">Nom d'usuari: </label> <input type="text" name="nom" id="nom" [(ngModel)]="playerName">
+    <button (click)="ready()">Jugar</button>
+  </div>
+  <div *ngIf="player != undefined && !iniciat">
+    Esperant a que els altres jugadors entrin... {{jugadors.jugadors.length}}/4
+  </div>
+  <div class="joc" *ngIf="player != undefined && iniciat">
+    <table class="taulellBlanques">
+      <tr>
+        <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[i-1]}}</td>
+      </tr>
+      <tr *ngFor="let fila of taulellBlanques; let i = index">
+        <td>{{8-i}}</td>
+        <td *ngFor=" let casella of fila" id="{{casella.id}}" (dragover)="allowDrop($event)"
+          (drop)="dropTaulellBlanques($event)" (dragleave)="unhighlightSquare($event)"
+          style="background-color: {{casella.color}};">
+          <img *ngIf="casella.peca != ''" id="{{casella.id}}" src="../../../../assets/{{casella.peca}}.svg"
+            draggable="true" (dragstart)="dragStart($event)" class="tw">
+        </td>
+        <td>{{8-i}}</td>
+      </tr>
+      <tr>
+        <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[i-1]}}</td>
+      </tr>
+    </table>
+
+    <table class="taulellNegres">
+      <tr>
+        <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[8-i]}}</td>
+      </tr>
+      <tr *ngFor="let fila of taulellNegres; let i = index">
+        <td>{{1+i}}</td>
+        <td *ngFor=" let casella of fila" id="{{casella.id}}" (dragover)="allowDrop($event)"
+          (drop)="dropTaulellNegres($event)" (dragleave)="unhighlightSquare($event)"
+          style="background-color: {{casella.color}};">
+          <img *ngIf="casella.peca != ''" id="{{casella.id}}" src="../../../../assets/{{casella.peca}}.svg"
+            draggable="true" (dragstart)="dragStart($event)" class="tb">
+        </td>
+        <td>{{1+i}}</td>
+      </tr>
+      <tr>
+        <td *ngFor="let item of [].constructor(10); let i = index"> {{alfabet[8-i]}}</td>
+      </tr>
+    </table>
+  </div>
 </body>
 
 </html>

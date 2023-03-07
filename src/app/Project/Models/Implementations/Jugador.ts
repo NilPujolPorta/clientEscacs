@@ -1,15 +1,18 @@
-
 export class Jugador {
   nom: string;
   color: string;
-  equip: string;
+  taulell: string;
+  id: string;
   constructor(
     nom: string,
     color: string,
-    equip: string) {
+    taulell: string,
+    id: string
+  ) {
     this.nom = nom;
     this.color = color;
-    this.equip = equip;
+    this.taulell = taulell;
+    this.id = id;
 
   }
 }
