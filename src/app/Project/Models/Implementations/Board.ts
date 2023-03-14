@@ -109,7 +109,7 @@ export class Board {
     return square;
   }
 
-  movePieceSocket(from: string, to: string, taulell: string) {
+  movePieceSocket(from: string, to: string) {
     let fromSquare = this.getSquare(from);
     let toSquare = this.getSquare(to);
     //check if the move is valid
@@ -131,32 +131,19 @@ export class Board {
       }
     }
   }
-  movePiece(from: string, to: string, taulell: string, jugador: Jugador) {
+
+  movePiece(from: string, to: string, taulell: string, jugador: Jugador): boolean {
     let fromSquare = this.getSquare(from);
     let toSquare = this.getSquare(to);
     let colorFrom = fromSquare.peca.substring(0, 1);
     let colorTo = toSquare.peca.substring(0, 1);
     //check if the move is valid
     if (fromSquare.id == '0' || toSquare.id == '0' || colorFrom == colorTo || colorFrom != this.torn || colorFrom != jugador.color || taulell != jugador.taulell) {
-      console.log('moviment not valid');
-      console.log(JSON.stringify(jugador));
-      return;
+      console.log('Movement not valid');
+      return false;
     }
-    //check if pawn is in the last row
-    if (fromSquare.peca == 'wpawn' && toSquare.y == 8) {
-      toSquare.peca = 'wqueen';
-    } else if (fromSquare.peca == 'bpawn' && toSquare.y == 1) {
-      toSquare.peca = 'bqueen';
-    } else {
-      toSquare.peca = fromSquare.peca;
-    }
-    fromSquare.peca = '';
-    //change turn
-    if (this.torn == 'w') {
-      this.torn = 'b';
-    } else {
-      this.torn = 'w';
-    }
+    return true;
+
   }
 
 }

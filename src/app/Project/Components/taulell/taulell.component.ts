@@ -17,7 +17,7 @@ export class TaulellComponent {
   taulellNegres;
   alfabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   iniciat: boolean = false;
-  jugadors!: { jugadors: [{ nom: string; color: string; taulell: string; id: string; }] };
+  jugadors: { jugadors: [{ nom: string; color: string; taulell: string; id: string; }] } = { jugadors: [{ nom: "", color: "", taulell: "", id: "" }] };
   player!: Jugador;
   playerName: string = "";
   private _playerSub!: Subscription;
@@ -33,14 +33,27 @@ export class TaulellComponent {
 
   }
 
-  movePieceBlanca(from: string, to: string) {
+  movePieceBlanca(from: string, to: string, player: { nom: string, color: string, taulell: string, id: string }) {
     console.log("moving " + from + " to " + to);
-    this.boardWhite.movePiece(from, to, "tw", this.player);
-    this.taulellBlanques = this.boardWhite.getBoardWhite();
+    if (this.boardWhite.movePiece(from, to, "tw", this.player)) {
+      this.taulellService.sendMove(from, to, player.taulell);
+    }
+
   }
-  movePieceNegra(from: string, to: string) {
-    this.boardBlack.movePiece(from, to, "tb", this.player);
-    this.taulellNegres = this.boardBlack.getBoardBlack();
+  movePieceNegra(from: string, to: string, player: { nom: string, color: string, taulell: string, id: string }) {
+    if (this.boardBlack.movePiece(from, to, "tb", this.player)) {
+      this.taulellService.sendMove(from, to, player.taulell);
+    }
+
+  }
+
+  //funcio pel socket
+  movePieceSocket(from: string, to: string, taulell: string) {
+    if (taulell == "tw") {
+      this.boardWhite.movePieceSocket(from, to);
+    } else {
+      this.boardBlack.movePieceSocket(from, to);
+    }
   }
 
   getSquare(id: string) {
@@ -71,7 +84,7 @@ export class TaulellComponent {
     if (posicioInici.length != 2) {
       return;
     }
-    this.movePieceBlanca(posicioInici, e.target.id);
+    this.movePieceBlanca(posicioInici, e.target.id, this.player);
   }
   dropTaulellNegres(e: any,) {
     this.unhighlightSquare(e);
@@ -79,7 +92,7 @@ export class TaulellComponent {
     if (posicioInici.length != 2) {
       return;
     }
-    this.movePieceNegra(posicioInici, e.target.id);
+    this.movePieceNegra(posicioInici, e.target.id, this.player);
   }
 
 
@@ -92,14 +105,22 @@ export class TaulellComponent {
   ready() {
     this._playerSub = this.taulellService.jugadors.pipe(
     ).subscribe(jugadors => this.jugadors = jugadors);
+
     this._playerSub = this.taulellService.player.pipe(
     ).subscribe(player => {
       console.log(JSON.stringify(player));
       this.player = new Jugador(player.nom, player.color, player.taulell, player.id)
     });
+
     this._playerSub = this.taulellService.iniciar.pipe(
     ).subscribe(iniciat => this.iniciat = iniciat);
     this.taulellService.newPlayer(this.playerName);
+
+    this._playerSub = this.taulellService.move.pipe(
+    ).subscribe(move => {
+      this.movePieceSocket(move.from, move.to, move.taulell);
+    }
+    );
 
   }
 }
