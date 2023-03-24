@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TaulellService {
-  jugadors: Observable<{ jugadors: [{ nom: string; color: string; taulell: string; id: string; }] }> = this.socket.fromEvent<{ jugadors: [{ nom: string; color: string; taulell: string; id: string; }] }>('players');
+  jugadors: Observable<{ jugadors: { nom: string, color: string, taulell: string, id: string }[] }> = this.socket.fromEvent<{ jugadors: { nom: string, color: string, taulell: string, id: string }[] }>('players');
   iniciar: Observable<boolean> = this.socket.fromEvent<boolean>('startGame');
   player: Observable<{ nom: string; color: string; taulell: string; id: string; }> = this.socket.fromEvent<{ nom: string; color: string; taulell: string; id: string; }>('player');
   move: Observable<{ from: string, to: string, taulell: string }> = this.socket.fromEvent<{ from: string, to: string, taulell: string }>('move');

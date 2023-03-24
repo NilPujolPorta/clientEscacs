@@ -3,6 +3,8 @@ import { Jugador } from "./Jugador";
 export class Board {
   squares: { id: string; peca: string; color: string; x: number; y: number }[]
   torn: string = "w";
+  cementiriBlanques: string[] = [];
+  cementiriNegres: string[] = [];
   constructor() {
     this.squares = [
       { id: "1a", peca: "wrook", color: 'SaddleBrown', x: 1, y: 1 },
@@ -115,6 +117,11 @@ export class Board {
     //check if the move is valid
     if (fromSquare.peca != '') {
       //check if pawn is in the last row
+      if (toSquare.peca.split('')[0] == 'w') {
+        this.cementiriBlanques.push(toSquare.peca);
+      } else if (toSquare.peca.split('')[0] == 'b') {
+        this.cementiriNegres.push(toSquare.peca);
+      }
       if (fromSquare.peca == 'wpawn' && toSquare.y == 8) {
         toSquare.peca = 'wqueen';
       } else if (fromSquare.peca == 'bpawn' && toSquare.y == 1) {

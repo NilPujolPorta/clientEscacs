@@ -17,7 +17,8 @@ export class TaulellComponent {
   taulellNegres;
   alfabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   iniciat: boolean = false;
-  jugadors: { jugadors: [{ nom: string; color: string; taulell: string; id: string; }] } = { jugadors: [{ nom: "", color: "", taulell: "", id: "" }] };
+  players: { jugadors: string[] } = { jugadors: [] };
+  jugadors: { jugadors: { nom: string, color: string, taulell: string, id: string }[] } = { jugadors: [] };
   player!: Jugador;
   playerName: string = "";
   private _playerSub!: Subscription;
